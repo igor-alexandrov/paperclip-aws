@@ -5,12 +5,12 @@
 
 Gem::Specification.new do |s|
   s.name = %q{papepclip-aws}
-  s.version = "1.0.0"
+  s.version = "1.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Igor Alexandrov"]
   s.date = %q{2011-08-03}
-  s.description = %q{If you want to work with Amazon Web Services, then you would choose official 'aws-sdk' gem for this. If you need Paperclip to store files on S3 then install this module too.}
+  s.description = %q{'paperclip-aws' is a full featured storage module that supports all S3 locations (US, European and Tokio) without any additional hacking.}
   s.email = %q{igor.alexandrov@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE.txt",
