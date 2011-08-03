@@ -17,8 +17,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "papepclip-aws"
   gem.homepage = "http://github.com/igor-alexandrov/papepclip-aws"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Storage module to official 'aws-sdk' gem for Amazon S3}
+  gem.description = %Q{If you want to work with Amazon Web Services, then you would choose official 'aws-sdk' gem for this. If you need Paperclip to store files on S3 then install this module too.}
   gem.email = "igor.alexandrov@gmail.com"
   gem.authors = ["Igor Alexandrov"]
   # dependencies defined in Gemfile

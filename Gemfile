@@ -1,7 +1,6 @@
 source "http://rubygems.org"
-# Add dependencies required to use your gem here.
-# Example:
-#   gem "activesupport", ">= 2.3.5"
+  gem 'paperclip', '>=2.3.0'
+  gem 'aws-sdk', '>=1.0.3'
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
