@@ -69,7 +69,7 @@ module Paperclip
       end
 
       def exists?(style = default_style)
-        @s3.buckets[@s3_bucket].objects[path(style_name)].exists?
+        @s3.buckets[@s3_bucket].objects[path(style)].exists?
       end
 
       def choose_protocol(options={})
