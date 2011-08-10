@@ -11,9 +11,9 @@ Just install in and your model is ready to be stored all over ther world.
 
 ## Installation ##
 
-    gem install papepclip-aws
+    gem install paperclip-aws
 
-After this add 'papepclip-aws' to your `Gemfile` or `environment.rb`
+After this add 'paperclip-aws' to your `Gemfile` or `environment.rb`
     
 ## Using Storage ##
 
