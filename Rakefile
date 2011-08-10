@@ -14,8 +14,8 @@ require 'rake'
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "papepclip-aws"
-  gem.homepage = "http://github.com/igor-alexandrov/papepclip-aws"
+  gem.name = "paperclip-aws"
+  gem.homepage = "http://github.com/igor-alexandrov/paperclip-aws"
   gem.license = "MIT"
   gem.summary = %Q{Storage module to official 'aws-sdk' gem for Amazon S3}
   gem.description = %Q{'paperclip-aws' is a full featured storage module that supports all S3 locations (US, European and Tokio) without any additional hacking.}
@@ -47,7 +47,7 @@ Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "papepclip-aws #{version}"
+  rdoc.title = "paperclip-aws #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
