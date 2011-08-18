@@ -42,6 +42,11 @@ module Paperclip
       end
               
       def url(style=default_style, options={})
+        if self.original_filename.nil? 
+          default_url = @default_url.is_a?(Proc) ? @default_url.call(self) : @default_url
+          return interpolate(default_url, style)          
+        end
+        
         if options[:expires].present? || options[:action].present?
           options.reverse_merge!({
             :expires => 60*60,
