@@ -12,7 +12,7 @@ GEM
       tzinfo (~> 0.3.23)
     activesupport (3.0.9)
     arel (2.0.10)
-    aws-sdk (1.0.3)
+    aws-sdk (1.1.0)
       httparty (~> 0.7)
       json (~> 1.4)
       nokogiri (>= 1.4.4)
@@ -46,7 +46,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  aws-sdk (>= 1.0.3)
+  aws-sdk (>= 1.1.0)
   bundler (~> 1.0.0)
   jeweler (~> 1.6.4)
   paperclip (>= 2.3.0)
