@@ -4,6 +4,15 @@
 
 Just install in and your model is ready to be stored all over ther world.
 
+## Features ##
+  
+* supports US, European and Japanese S3 instances;
+* supports both `http` and `https` urls;
+* supports expiring urls;
+* can generate urls for `read`, `write` и `delete` operations;
+* correctly sets content-type of uploaded files;
+
+
 ## Requirements ##
 
 * [paperclip][0] ~> 2.3
