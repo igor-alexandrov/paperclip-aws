@@ -2,8 +2,6 @@
 
 'paperclip-aws' is a full featured storage module that supports all S3 locations (US, European and Tokio) without any additional hacking.
 
-Just install in and your model is ready to be stored all over ther world.
-
 ## Features ##
   
 * supports US, European and Japanese S3 instances;
