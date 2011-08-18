@@ -1,6 +1,6 @@
 source "http://rubygems.org"
   gem 'paperclip', '>=2.3.0'
-  gem 'aws-sdk', '>=1.0.3'
+  gem 'aws-sdk', '>=1.1.0'
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.

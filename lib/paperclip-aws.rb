@@ -106,7 +106,8 @@ module Paperclip
             @s3.buckets[@s3_bucket].objects[path(style)].write(
               file,
               :acl => @s3_acl,
-              :storage_class => @s3_storage_class
+              :storage_class => @s3_storage_class,
+              :content_type => file.content_type
             )
           rescue AWS::S3::Errors::NoSuchBucket => e
             create_bucket
