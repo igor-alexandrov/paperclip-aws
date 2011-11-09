@@ -22,7 +22,8 @@ module Paperclip
           
           # setup permissions
           @s3_acl           = @options[:s3_acl]           || :public_read
-          
+          @s3_sse = @options[:s3_sse]
+
           # choose what storage class we use, 'standard' or 'reduced_redundancy'
           @s3_storage_class = @options[:s3_storage_class] || :standard
           
@@ -107,12 +108,13 @@ module Paperclip
         @queued_for_write.each do |style, file|
           begin
             log("saving #{path(style)}")
-            
+
             @s3.buckets[@s3_bucket].objects[path(style)].write(
               file,
               :acl => @s3_acl,
               :storage_class => @s3_storage_class,
-              :content_type => file.content_type
+              :content_type => file.content_type,
+              :server_side_encryption => @s3_sse
             )
           rescue AWS::S3::Errors::NoSuchBucket => e
             create_bucket
