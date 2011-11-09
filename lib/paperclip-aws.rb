@@ -138,7 +138,7 @@ module Paperclip
           begin
             log("deleting #{path}")
             @s3.buckets[@s3_bucket].objects[path].delete
-          rescue AWS::S3::Base => e
+          rescue AWS::S3::Errors::Base => e
             raise
           end
         end
