@@ -75,7 +75,14 @@ module Paperclip
       end
 
       def exists?(style = default_style)
-        @s3.buckets[@s3_bucket].objects[path(style)].exists?
+        if path(style).nil? || path(style).to_s.trim == ""
+          return false
+        end
+        begin
+          return @s3.buckets[@s3_bucket].objects[path(style)].exists?
+        rescue AWS::S3::Errors::NoSuchKey
+          return false
+        end
       end
 
       def choose_protocol(options={})
