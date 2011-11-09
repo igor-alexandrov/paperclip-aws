@@ -126,7 +126,7 @@ module Paperclip
           rescue AWS::S3::Errors::NoSuchBucket => e
             create_bucket
             retry
-          rescue AWS::S3::Errors::Base => e
+          rescue AWS::Errors::Base => e
             raise
           end
         end
@@ -138,7 +138,7 @@ module Paperclip
           begin
             log("deleting #{path}")
             @s3.buckets[@s3_bucket].objects[path].delete
-          rescue AWS::S3::Errors::Base => e
+          rescue AWS::Errors::Base => e
             raise
           end
         end
