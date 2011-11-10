@@ -75,7 +75,7 @@ module Paperclip
       end
 
       def exists?(style = default_style)
-        if path(style).nil? || path(style).to_s.trim == ""
+        if path(style).nil? || path(style).to_s.strip == ""
           return false
         end
         begin
