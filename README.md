@@ -9,12 +9,13 @@
 * supports expiring urls;
 * can generate urls for `read`, `write` и `delete` operations;
 * correctly sets content-type of uploaded files;
+* **supports amazon server side encryption** (thanks to [pvertenten](https://github.com/pvertenten));
 
 
 ## Requirements ##
 
 * [paperclip][0] ~> 2.3
-* [aws-sdk][1] >= 1.0.3
+* [aws-sdk][1] >= 1.2.2
 
 ## Installation ##
 
