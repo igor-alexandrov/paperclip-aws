@@ -61,7 +61,7 @@ module Paperclip
             :action => :read
           })          
           secure = ( self.choose_protocol(options) == 'https' )                   
-          @s3.buckets[@s3_bucket].objects[path(style)].url_for(options[:action], {  :secure => secure, :expires => options[:expires] }).to_s
+          @s3.buckets[@s3_bucket].objects[path(style).gsub(%r{^/}, "")].url_for(options[:action], {  :secure => secure, :expires => options[:expires] }).to_s
         else
           if @s3_host_alias.present?
             "#{choose_protocol(options)}://#{@s3_host_alias}/#{path(style).gsub(%r{^/}, "")}"
