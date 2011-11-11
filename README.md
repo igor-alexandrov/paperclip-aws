@@ -1,12 +1,13 @@
 # Storage module to official 'aws-sdk' gem for Amazon S3 #
 
-'paperclip-aws' is a full featured storage module that supports all S3 locations (US, European and Tokio) without any additional hacking.
+'paperclip-aws' is a full featured storage module that supports all S3 locations (American, European and Japanese) without any additional hacking.
 
 ## Features ##
   
 * supports US, European and Japanese S3 instances;
 * supports both `http` and `https` urls;
 * supports expiring urls;
+* supports different permissions for each Paperclip style;
 * can generate urls for `read`, `write` и `delete` operations;
 * correctly sets content-type of uploaded files;
 * **supports amazon server side encryption** (thanks to [pvertenten](https://github.com/pvertenten));
@@ -14,8 +15,8 @@
 
 ## Requirements ##
 
-* [paperclip][0] ~> 2.3
-* [aws-sdk][1] >= 1.2.2
+* [paperclip][0] ~> 2.4
+* [aws-sdk][1] >= 1.2.0
 
 ## Installation ##
 
@@ -41,10 +42,15 @@ After this add 'paperclip-aws' to your `Gemfile` or `environment.rb`
                           :secret_access_key => self.s3_config['secret_access_key'],
                           :endpoint => self.s3_config['endpoint']
                         },
-                        :s3_bucket => self.s3_config['bucket'],                    
+                        :bucket => self.s3_config['bucket'],                    
                         :s3_host_alias => self.s3_config['s3_host_alias'],
-                        :s3_acl => :public_read,
+                        :s3_permissions => :public_read,
                         :s3_protocol => 'http',
+                        :s3_options => {
+                          :sse => 'AES256',
+                          :storage_class => :reduced_redundancy
+                        },
+                        
                         :path => "company_documents/:id/:style/:data_file_name"  
     end
                       
@@ -55,7 +61,7 @@ Endpoint where your bucket is located. Default is `'s3.amazonaws.com'` which is 
 
 You can find full list of endpoints and regions [here](http://aws.amazon.com/articles/3912#s3)
 
-### :s3_acl  ###
+### :s3_permissions  ###
 Sets permissions to your objects. Values are:
 
     :private
@@ -64,9 +70,27 @@ Sets permissions to your objects. Values are:
     :authenticated_read
     :bucket_owner_read
     :bucket_owner_full_control
+
+You can setup permnissions globally for object or per style:    
+
+    :s3_permissions => :public_read
+    
+    
+    :s3_permissions => {
+      :thumb => :public_read,
+      :medium => :authenticated_read,
+      :default => :authenticated_read
+    }
    
 ### :s3_protocol ###
 Default protocol to use: `'http'` or `'https'`.
+
+### :s3_options ###
+Hash of additional options. Available options are:
+
+* `:sse` –  `'AES256'` (the only available encryption now)
+* `:storage_class` – `:standard` (default) or `:reduced_redundancy`
+
 
 ## Get your data
 
@@ -75,7 +99,7 @@ Default protocol to use: `'http'` or `'https'`.
     def url(style=default_style, options={})
     end
 
-Supported options are 
+Supported options are:
 
 * `:protocol` — `'http'` or `'https'`
 

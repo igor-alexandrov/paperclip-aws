@@ -12,27 +12,33 @@ module Paperclip
           e.message << " (You may need to install the aws-sdk gem)"
           raise e
         end unless defined?(AWS)
-
-        base.instance_eval do
-          @s3_credentials   = parse_credentials(@options[:s3_credentials])
+        
+        base.instance_eval do         
+          @s3_credentials = parse_credentials(@options.s3_credentials)
+          @s3_permissions = set_permissions(@options.s3_permissions)
+          @s3_protocol    = @options.s3_protocol    ||
+            Proc.new do |style, attachment|
+              permission  = (@s3_permissions[style.to_sym] || @s3_permissions[:default])
+              permission  = permission.call(attachment, style) if permission.is_a?(Proc)
+              (permission == :public_read) ? 'http' : 'https'
+            end
+          @s3_headers     = @options.s3_headers     || {}
           
-          # setup bucket
-          @s3_bucket = @options[:s3_bucket] || @s3_credentials[:bucket]
+          @s3_bucket      = @options.bucket
           @s3_bucket = @s3_bucket.call(self) if @s3_bucket.is_a?(Proc) 
           
-          # setup permissions
-          @s3_acl           = @options[:s3_acl]           || :public_read
-          @s3_sse = @options[:s3_sse]
-
+          @s3_options     = @options.s3_options     || {}
+          # setup Amazon Server Side encryption
+          @s3_sse           = @s3_options[:sse]            || false
           # choose what storage class we use, 'standard' or 'reduced_redundancy'
-          @s3_storage_class = @options[:s3_storage_class] || :standard
+          @s3_storage_class = @s3_options[:storage_class]  || :standard
           
-          @s3_protocol      = @options[:s3_protocol]      || 'http'
-          @s3_headers       = @options[:s3_headers]       || {}
-          @s3_host_alias    = @options[:s3_host_alias]
+          @s3_endpoint      = @s3_credentials[:endpoint] || 's3.amazonaws.com'
+                    
+          @s3_host_alias    = @options.s3_host_alias
           @s3_host_alias    = @s3_host_alias.call(self) if @s3_host_alias.is_a?(Proc)
           
-          @s3_endpoint = @s3_credentials[:endpoint] || 's3.amazonaws.com'
+
           
           @s3 = AWS::S3.new(
             :access_key_id => @s3_credentials[:access_key_id],
@@ -40,6 +46,7 @@ module Paperclip
             :s3_endpoint => @s3_endpoint
           )
         end
+        
       end
               
       def url(style=default_style, options={})
@@ -72,6 +79,15 @@ module Paperclip
         creds = find_credentials(creds).stringify_keys
         env = Object.const_defined?(:Rails) ? Rails.env : nil
         (creds[env] || creds).symbolize_keys
+      end
+      
+      def set_permissions permissions
+        if permissions.is_a?(Hash)
+          permissions[:default] = permissions[:default] || :public_read
+        else
+          permissions = { :default => permissions || :public_read }
+        end
+        permissions
       end
 
       def exists?(style = default_style)
@@ -118,10 +134,10 @@ module Paperclip
 
             @s3.buckets[@s3_bucket].objects[path(style)].write(
               file,
-              :acl => @s3_acl,
-              :storage_class => @s3_storage_class,
+              :acl => @s3_permissions[:style.to_sym] || @s3_permissions[:default],
+              :storage_class => @s3_storage_class.to_sym,
               :content_type => file.content_type,
-              :server_side_encryption => @s3_sse
+              :server_side_encryption => @s3_sse.to_s
             )
           rescue AWS::S3::Errors::NoSuchBucket => e
             create_bucket
