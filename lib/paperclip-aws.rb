@@ -137,7 +137,7 @@ module Paperclip
               :acl => @s3_permissions[:style.to_sym] || @s3_permissions[:default],
               :storage_class => @s3_storage_class.to_sym,
               :content_type => file.content_type,
-              :server_side_encryption => @s3_sse.to_s
+              :server_side_encryption => @s3_sse
             )
           rescue AWS::S3::Errors::NoSuchBucket => e
             create_bucket

@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/igor-alexandrov/paperclip-aws.png)](http://travis-ci.org/[YOUR_GITHUB_USERNAME]/[YOUR_PROJECT_NAME])
+
 # Storage module to official 'aws-sdk' gem for Amazon S3 #
 
 'paperclip-aws' is a full featured storage module that supports all S3 locations (American, European and Japanese) without any additional hacking.
