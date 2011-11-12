@@ -16,12 +16,14 @@ module Paperclip
         base.instance_eval do         
           @s3_credentials = parse_credentials(@options.s3_credentials)
           @s3_permissions = set_permissions(@options.s3_permissions)
+          
           @s3_protocol    = @options.s3_protocol    ||
             Proc.new do |style, attachment|
               permission  = (@s3_permissions[style.to_sym] || @s3_permissions[:default])
               permission  = permission.call(attachment, style) if permission.is_a?(Proc)
               (permission == :public_read) ? 'http' : 'https'
             end
+          
           @s3_headers     = @options.s3_headers     || {}
           
           @s3_bucket      = @options.bucket
@@ -60,13 +62,13 @@ module Paperclip
             :expires => 60*60,
             :action => :read
           })          
-          secure = ( self.choose_protocol(options) == 'https' )                   
+          secure = ( self.choose_protocol(style, options) == 'https' )                   
           @s3.buckets[@s3_bucket].objects[path(style).gsub(%r{^/}, "")].url_for(options[:action], {  :secure => secure, :expires => options[:expires] }).to_s
         else
           if @s3_host_alias.present?
-            "#{choose_protocol(options)}://#{@s3_host_alias}/#{path(style).gsub(%r{^/}, "")}"
+            "#{choose_protocol(style, options)}://#{@s3_host_alias}/#{path(style).gsub(%r{^/}, "")}"
           else
-            "#{choose_protocol(options)}://#{@s3_endpoint}/#{@s3_bucket}/#{path(style).gsub(%r{^/}, "")}"
+            "#{choose_protocol(style, options)}://#{@s3_endpoint}/#{@s3_bucket}/#{path(style).gsub(%r{^/}, "")}"
           end        
         end
       end
@@ -101,11 +103,11 @@ module Paperclip
         end
       end
 
-      def choose_protocol(options={})
+      def choose_protocol(style, options={})
         if options[:protocol].present?
           return options[:protocol].to_s
         else
-          return @s3_protocol
+          return @s3_protocol.is_a?(Proc) ? @s3_protocol.call(style, self) : @s3_protocol
         end
       end
 

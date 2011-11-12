@@ -1,6 +1,6 @@
 [![Build Status](https://secure.travis-ci.org/igor-alexandrov/paperclip-aws.png)](http://travis-ci.org/igor-alexandrov/paperclip-aws)
 
-# Storage module to official 'aws-sdk' gem for Amazon S3 #
+# Paperclip storage module to use Amazon S3 with official 'aws-sdk' gem #
 
 'paperclip-aws' is a full featured storage module that supports all S3 locations (American, European and Japanese) without any additional hacking.
 
@@ -13,6 +13,7 @@
 * can generate urls for `read`, `write` и `delete` operations;
 * correctly sets content-type of uploaded files;
 * **supports amazon server side encryption** (thanks to [pvertenten](https://github.com/pvertenten));
+* highly compatible with included in Paperclip S3 storage module
 
 
 ## Requirements ##
