@@ -1,4 +1,4 @@
-[![Build Status](https://secure.travis-ci.org/igor-alexandrov/paperclip-aws.png)](http://travis-ci.org/[YOUR_GITHUB_USERNAME]/[YOUR_PROJECT_NAME])
+[![Build Status](https://secure.travis-ci.org/igor-alexandrov/paperclip-aws.png)](http://travis-ci.org/igor-alexandrov/paperclip-aws)
 
 # Storage module to official 'aws-sdk' gem for Amazon S3 #
 
