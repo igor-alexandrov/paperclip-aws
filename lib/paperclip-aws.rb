@@ -1,6 +1,7 @@
 # coding: UTF-8
 
 require 'paperclip'
+require 'uri'
 
 module Paperclip
   module Storage
@@ -50,7 +51,7 @@ module Paperclip
         end
         
       end
-              
+      
       def url(style=default_style, options={})
         if self.original_filename.nil? 
           default_url = @default_url.is_a?(Proc) ? @default_url.call(self) : @default_url
@@ -63,14 +64,16 @@ module Paperclip
             :action => :read
           })          
           secure = ( self.choose_protocol(style, options) == 'https' )                   
-          @s3.buckets[@s3_bucket].objects[path(style).gsub(%r{^/}, "")].url_for(options[:action], {  :secure => secure, :expires => options[:expires] }).to_s
+          url = @s3.buckets[@s3_bucket].objects[path(style).gsub(%r{^/}, "")].url_for(options[:action], {  :secure => secure, :expires => options[:expires] }).to_s
         else
           if @s3_host_alias.present?
-            "#{choose_protocol(style, options)}://#{@s3_host_alias}/#{path(style).gsub(%r{^/}, "")}"
+            url = "#{choose_protocol(style, options)}://#{@s3_host_alias}/#{path(style).gsub(%r{^/}, "")}"
           else
-            "#{choose_protocol(style, options)}://#{@s3_endpoint}/#{@s3_bucket}/#{path(style).gsub(%r{^/}, "")}"
+            url = "#{choose_protocol(style, options)}://#{@s3_endpoint}/#{@s3_bucket}/#{path(style).gsub(%r{^/}, "")}"
           end        
         end
+        
+        return URI.escape(url)
       end
       
       def bucket_name
@@ -133,7 +136,7 @@ module Paperclip
         @queued_for_write.each do |style, file|
           begin
             log("saving #{path(style)}")
-
+            
             @s3.buckets[@s3_bucket].objects[path(style)].write(
               file,
               :acl => @s3_permissions[:style.to_sym] || @s3_permissions[:default],

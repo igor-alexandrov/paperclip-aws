@@ -25,6 +25,7 @@ class Test::Unit::TestCase
     silence_warnings do
       Object.const_set(:Rails, stub('Rails', :root => ROOT, :env => 'test'))
     end
+    Rails.stubs(:const_defined?)
   end
 end
 
@@ -62,4 +63,8 @@ def reset_class(class_name, options)
   end
   klass.reset_column_information
   klass
+end
+
+def fixture_file(filename)
+  File.join(File.dirname(__FILE__), 'fixtures', filename)
 end

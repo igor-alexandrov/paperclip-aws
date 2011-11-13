@@ -20,9 +20,7 @@ class AwsStorageTest < Test::Unit::TestCase
   end
   
   context "Parsing S3 credentials" do
-    setup do
-      Rails.stubs(:const_defined?)
-      
+    setup do      
       rebuild_model default_model_options
 
       @dummy = Dummy.new
@@ -61,10 +59,6 @@ class AwsStorageTest < Test::Unit::TestCase
   end
   
   context "Working with endpoints" do
-    setup do
-      Rails.stubs(:const_defined?)      
-    end
-
     should "return a correct url based on a path with default endpoint" do
       rebuild_model default_model_options
       
@@ -86,10 +80,6 @@ class AwsStorageTest < Test::Unit::TestCase
   end
   
   context "Working with protocols" do
-    setup do
-      Rails.stubs(:const_defined?)      
-    end
-    
     should "return a correct url with http protocol predefined" do
       rebuild_model default_model_options(:s3_protocol => 'http')
       
@@ -109,5 +99,106 @@ class AwsStorageTest < Test::Unit::TestCase
       assert_match  /\Ahttps:\/\/.+/,  @dummy.avatar.url
     end
     
+    should "return a correct protocol protocol based on s3_permissions" do
+      rebuild_model default_model_options(:s3_permissions => :public_read)
+      @dummy = Dummy.new
+      @dummy.avatar = StringIO.new(".")      
+      assert_match  /\Ahttp:\/\/.+/,  @dummy.avatar.url
+      
+      rebuild_model default_model_options(:s3_permissions => :private)
+      @dummy = Dummy.new
+      @dummy.avatar = StringIO.new(".")      
+      assert_match  /\Ahttps:\/\/.+/,  @dummy.avatar.url
+      
+      rebuild_model default_model_options(:s3_permissions => :public_read_write)
+      @dummy = Dummy.new
+      @dummy.avatar = StringIO.new(".")      
+      assert_match  /\Ahttps:\/\/.+/,  @dummy.avatar.url
+      
+      rebuild_model default_model_options(:s3_permissions => :authenticated_read)
+      @dummy = Dummy.new
+      @dummy.avatar = StringIO.new(".")      
+      assert_match  /\Ahttps:\/\/.+/,  @dummy.avatar.url
+      
+      rebuild_model default_model_options(:s3_permissions => :bucket_owner_read)
+      @dummy = Dummy.new
+      @dummy.avatar = StringIO.new(".")      
+      assert_match  /\Ahttps:\/\/.+/,  @dummy.avatar.url
+      
+      rebuild_model default_model_options(:s3_permissions => :bucket_owner_full_control)
+      @dummy = Dummy.new
+      @dummy.avatar = StringIO.new(".")      
+      assert_match  /\Ahttps:\/\/.+/,  @dummy.avatar.url      
+    end
+    
+    should "return a correct url when protocol explicitely defined from url" do
+      rebuild_model default_model_options
+      @dummy = Dummy.new
+      @dummy.avatar = StringIO.new(".")      
+      assert_match  /\Ahttps:\/\/.+/,  @dummy.avatar.url(:original, :protocol => "https")
+      
+      rebuild_model default_model_options(:s3_permissions => :private)
+      @dummy = Dummy.new
+      @dummy.avatar = StringIO.new(".")      
+      assert_match  /\Ahttp:\/\/.+/,  @dummy.avatar.url(:original, :protocol => "http")      
+    end
+  end
+  
+  context "Working with expiring urls" do
+    should "return a correct url which contains 'Expires' parameter" do
+      rebuild_model default_model_options
+      @dummy = Dummy.new
+      @dummy.avatar = StringIO.new(".")
+      
+      assert_match  /\Ahttp:\/\/.+Expires.+/,  @dummy.avatar.url(:original, :expires => 1.day)      
+    end
+  end
+  
+  context "An attachment that uses S3 for storage and has styles that return different file types" do
+    setup do
+      rebuild_model default_model_options(:styles  => { :large => ['500x500#', :jpg] })
+
+      @dummy = Dummy.new
+      @dummy.avatar = File.new(fixture_file('5k.png'), 'rb')
+    end
+
+    should "return a url containing the correct original file mime type" do
+      assert_match /.+\/5k.png/, @dummy.avatar.url
+    end
+
+    should "return a url containing the correct processed file mime type" do
+      assert_match /.+\/5k.jpg/, @dummy.avatar.url(:large)
+    end
+  end
+  
+  context "An attachment that uses S3 for storage and has spaces in file name" do
+    setup do
+      rebuild_model default_model_options(:styles  => { :large => ['500x500#', :jpg] })
+      
+      @dummy = Dummy.new
+      @dummy.avatar = File.new(fixture_file('spaced file.png'), 'rb')
+    end
+
+    should "return an unescaped version for path" do
+      assert_match /.+\/spaced file\.png/, @dummy.avatar.path
+    end
+
+    should "return an escaped version for url" do
+      assert_match /.+\/spaced%20file\.png/, @dummy.avatar.url
+    end
+  end
+  
+  context "An attachment with AWS storage" do
+    setup do
+      rebuild_model default_model_options
+    end
+
+    should "be extended by the AWS module" do
+      assert Dummy.new.avatar.is_a?(Paperclip::Storage::Aws)
+    end
+
+    should "not be extended by the Filesystem module" do
+      assert ! Dummy.new.avatar.is_a?(Paperclip::Storage::Filesystem)
+    end
   end
 end
