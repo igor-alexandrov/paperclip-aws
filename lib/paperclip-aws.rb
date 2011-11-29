@@ -1,6 +1,7 @@
 # coding: UTF-8
 
 require 'paperclip'
+require 'aws-sdk'
 require 'uri'
 
 module Paperclip
