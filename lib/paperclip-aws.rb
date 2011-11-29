@@ -101,7 +101,7 @@ module Paperclip
         end
         begin
           return @s3.buckets[@s3_bucket].objects[path(style)].exists?
-        rescue AWS::S3::Errors::NoSuchKey
+        rescue AWS::S3::Errors::Base
           return false
         end
       end
