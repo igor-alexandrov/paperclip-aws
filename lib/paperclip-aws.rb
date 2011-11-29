@@ -138,7 +138,7 @@ module Paperclip
             log("saving #{path(style)}")
             
             @s3.buckets[@s3_bucket].objects[path(style)].write(
-              file,
+              :file => file.path,
               :acl => @s3_permissions[:style.to_sym] || @s3_permissions[:default],
               :storage_class => @s3_storage_class.to_sym,
               :content_type => file.content_type,
