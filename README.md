@@ -52,7 +52,7 @@ After this add 'paperclip-aws' to your `Gemfile` or `environment.rb`
                         :s3_protocol => 'http',
                         :s3_options => {
                           :sse => 'AES256',
-                          :storage_class => :reduced_redundancy
+                          :storage_class => :reduced_redundancy,
                           :content_disposition => 'attachment'
                         },
                         
