@@ -15,7 +15,10 @@ module Paperclip
           raise e
         end unless defined?(AWS)
         
-        base.instance_eval do         
+        attr_accessor :s3_options
+        base.instance_eval do
+
+                   
           @s3_credentials = parse_credentials(@options.s3_credentials)
           @s3_permissions = set_permissions(@options.s3_permissions)
           
@@ -33,9 +36,17 @@ module Paperclip
           
           @s3_options     = @options.s3_options     || {}
           # setup Amazon Server Side encryption
-          @s3_sse           = @s3_options[:sse]            || false
-          # choose what storage class we use, 'standard' or 'reduced_redundancy'
-          @s3_storage_class = @s3_options[:storage_class]  || :standard
+          @s3_options.reverse_merge!({
+            :sse => false,
+            :storage_class => :standard,
+            :content_disposition => nil
+          })
+          
+          # @s3_sse           = @s3_options[:sse]            || false
+          # # choose what storage class we use, 'standard' or 'reduced_redundancy'
+          # @s3_storage_class = @s3_options[:storage_class]  || :standard
+          # 
+          # @s3_content_disposition = @s3_options[:content_disposition] || ''
           
           @s3_endpoint      = @s3_credentials[:endpoint] || 's3.amazonaws.com'
                     
@@ -140,9 +151,10 @@ module Paperclip
             @s3.buckets[@s3_bucket].objects[path(style)].write(
               :file => file.path,
               :acl => @s3_permissions[:style.to_sym] || @s3_permissions[:default],
-              :storage_class => @s3_storage_class.to_sym,
+              :storage_class => @s3_options[:storage_class],
               :content_type => file.content_type,
-              :server_side_encryption => @s3_sse
+              :content_disposition => @s3_options[:content_disposition],
+              :server_side_encryption => @s3_options[:sse]
             )
           rescue AWS::S3::Errors::NoSuchBucket => e
             create_bucket
