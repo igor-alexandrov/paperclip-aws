@@ -102,6 +102,7 @@ Hash of additional options. Available options are:
 
 * `:sse` –  `'AES256'` (the only available encryption now)
 * `:storage_class` – `:standard` (default) or `:reduced_redundancy`
+* `:content_disposition`
 
 
 ## Get your data
