@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "paperclip-aws"
-  s.version = "1.3.5"
+  s.version = "1.4.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Igor Alexandrov"]
-  s.date = "2011-11-29"
+  s.date = "2011-11-30"
   s.description = "'paperclip-aws' is a full featured storage module that supports all S3 locations (US, European and Tokio) without any additional hacking."
   s.email = "igor.alexandrov@gmail.com"
   s.extra_rdoc_files = [
