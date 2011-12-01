@@ -2,7 +2,7 @@
 
 # Paperclip storage module to use Amazon S3 with official 'aws-sdk' gem #
 
-'paperclip-aws' is a full featured storage module that supports all S3 locations (American, European and Japanese) without any additional hacking.
+**paperclip-aws** is a full featured storage module that supports all S3 locations (American, European and Japanese) without any additional hacking.
 
 ## Features ##
   
