@@ -141,7 +141,7 @@ Supported options are:
 
 ## Can I use it in production?
 
-Yes, usage of `paperclip-aws` is confirmed by several rather big projects:
+Yes, usage of **paperclip-aws** is confirmed by several rather big projects:
 
 * [www.sdelki.ru](http://www.sdelki.ru)
 * [www.lienlog.com](http://www.lienlog.com) (opens for public in December 2011)
