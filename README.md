@@ -28,7 +28,7 @@
 
 After this add 'paperclip-aws' to your `Gemfile` or `environment.rb`
     
-## Using Storage ##
+## Common Usage ##
 
     class SomeS3Attachment < ActiveRecord::Base
       def self.s3_config
@@ -65,8 +65,13 @@ After this add 'paperclip-aws' to your `Gemfile` or `environment.rb`
         self.data.s3_options[:storage_class] = true if self.unimportant_information?
       end                          
     end
+
+Create link for file that will expire in 10 seconds after it was created. Useful when redirecting user to file.
+
+    file.data.url(:original, { :expires => Time.now + 10.seconds, :protocol => 'https' })
+
                       
-## Possible options ##
+## Configuration ##
 
 ### :endpoint ###
 Endpoint where your bucket is located. Default is `'s3.amazonaws.com'` which is for 'US Standard' region.
@@ -105,7 +110,7 @@ Hash of additional options. Available options are:
 * `:content_disposition`
 
 
-## Get your data
+## How `paperclip-aws` creates urls?
 
 'paperclip-aws' redefines Paperclip `url` method to get object URL.
 
@@ -134,12 +139,15 @@ Supported options are:
   
   Default is set to `:read`, which is the most common used.
 
-## Examples
-  
-Create link for file that will expire in 10 seconds after it was created. Useful when redirecting user to file.
-  
-    file.data.url(:original, { :expires => Time.now + 10.seconds, :protocol => 'https' })
-    
+## Can I use it in production?
+
+Yes, usage of `paperclip-aws` is confirmed by several rather big projects:
+
+* [www.sdelki.ru](http://www.sdelki.ru)
+* [www.lienlog.com](http://www.lienlog.com) (opens for public in December 2011)
+* [www.sharypic.com](http://www.sharypic.com) (soon)
+
+I hope that it is used in a lot of other projects, if you know them – let me know.
     
 [0]: https://github.com/thoughtbot/paperclip
 [1]: https://github.com/amazonwebservices/aws-sdk-for-ruby
