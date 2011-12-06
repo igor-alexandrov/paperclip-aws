@@ -154,6 +154,26 @@ class AwsStorageTest < Test::Unit::TestCase
     end
   end
   
+  context "Working with default urls" do
+    should "return a correct default url without data initialized" do
+      rebuild_model default_model_options
+      @dummy = Dummy.new
+      
+      assert_match  /avatars\/original\/missing/,  @dummy.avatar.url
+      assert_match  /avatars\/another\/missing/,  @dummy.avatar.url(:another)
+    end
+    
+    should "return a correct default url without data initialized and with default_url parameter set" do
+      rebuild_model default_model_options(:default_url => '/:attachment/:style_missing.png')
+      @dummy = Dummy.new
+      
+      assert_match  /avatars\/original_missing/,  @dummy.avatar.url
+      assert_match  /avatars\/another_missing/,  @dummy.avatar.url(:another)
+    end
+    
+  end
+  
+  
   context "An attachment that uses S3 for storage and has styles that return different file types" do
     setup do
       rebuild_model default_model_options(:styles  => { :large => ['500x500#', :jpg] })

@@ -42,19 +42,11 @@ module Paperclip
             :content_disposition => nil
           })
           
-          # @s3_sse           = @s3_options[:sse]            || false
-          # # choose what storage class we use, 'standard' or 'reduced_redundancy'
-          # @s3_storage_class = @s3_options[:storage_class]  || :standard
-          # 
-          # @s3_content_disposition = @s3_options[:content_disposition] || ''
-          
           @s3_endpoint      = @s3_credentials[:endpoint] || 's3.amazonaws.com'
                     
           @s3_host_alias    = @options.s3_host_alias
           @s3_host_alias    = @s3_host_alias.call(self) if @s3_host_alias.is_a?(Proc)
-          
-
-          
+                    
           @s3 = AWS::S3.new(
             :access_key_id => @s3_credentials[:access_key_id],
             :secret_access_key => @s3_credentials[:secret_access_key],
@@ -66,8 +58,9 @@ module Paperclip
       
       def url(style=default_style, options={})
         if self.original_filename.nil? 
-          default_url = @default_url.is_a?(Proc) ? @default_url.call(self) : @default_url
-          return interpolate(default_url, style)          
+          # default_url = @default_url.is_a?(Proc) ? @default_url.call(self) : @default_url
+          # return interpolate(default_url, style)          
+          return super
         end
         
         if options[:expires].present? || options[:action].present?
