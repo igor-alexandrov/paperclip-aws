@@ -221,4 +221,71 @@ class AwsStorageTest < Test::Unit::TestCase
       assert ! Dummy.new.avatar.is_a?(Paperclip::Storage::Filesystem)
     end
   end
+
+  context "S3 options" do
+    setup do
+      @writer = mock()
+      AWS::S3.expects(:new).returns(
+        stub(:buckets =>
+          stub(:[] =>
+            stub(:objects =>
+              stub(:[] => @writer)
+            )
+          )
+        )
+      )
+    end
+
+    should "be set to default" do
+      rebuild_model default_model_options
+
+      @writer.expects(:write).with do |value|
+        value[:sse] == nil &&
+        value[:server_side_encryption] == false &&
+        value[:storage_class] == :standard &&
+        value[:content_disposition] == nil &&
+        value[:expires] == nil
+      end
+
+      @dummy = Dummy.new
+      @dummy.avatar = File.new(fixture_file('spaced file.png'), 'rb')
+      @dummy.save
+    end
+
+    should "be configured" do
+      rebuild_model default_model_options(:s3_options => {
+        :sse => 'AES256',
+        :storage_class => :reduced_redundancy,
+        :content_disposition => :attachment,
+        :cache_control => 'max-age=86400'
+      })
+
+      @writer.expects(:write).with do |value|
+        value[:sse] == nil &&
+        value[:server_side_encryption] == 'AES256' &&
+        value[:storage_class] == :reduced_redundancy &&
+        value[:content_disposition] == :attachment &&
+        value[:cache_control] == 'max-age=86400'
+      end
+
+      @dummy = Dummy.new
+      @dummy.avatar = File.new(fixture_file('spaced file.png'), 'rb')
+      @dummy.save
+    end
+
+    should "work with string-keyed hash" do
+      rebuild_model default_model_options(:s3_options => {
+        'cache_control' => 'max-age=86400'
+      })
+
+      @writer.expects(:write).with do |value|
+        value['cache_control'] == nil &&
+        value[:cache_control] == 'max-age=86400'
+      end
+
+      @dummy = Dummy.new
+      @dummy.avatar = File.new(fixture_file('spaced file.png'), 'rb')
+      @dummy.save
+    end
+  end
 end
