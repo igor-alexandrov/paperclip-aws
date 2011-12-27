@@ -28,7 +28,6 @@ Gem::Specification.new do |s|
     "paperclip-aws.gemspec",
     "test/aws_storage_test.rb",
     "test/database.yml",
-    "test/debug.log",
     "test/fixtures/5k.png",
     "test/fixtures/spaced file.png",
     "test/helper.rb"
