@@ -24,7 +24,8 @@ module Paperclip
               :s3_headers,
               :bucket,
               :s3_options,
-              :s3_host_alias
+              :s3_host_alias,
+              :s3_protocol
             ].each do |meth|
               define_method(meth) { self[meth] || self[meth.to_s] } unless respond_to?(meth)
             end
