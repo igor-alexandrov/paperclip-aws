@@ -34,13 +34,14 @@ module Paperclip
           @s3_bucket      = @options.bucket
           @s3_bucket = @s3_bucket.call(self) if @s3_bucket.is_a?(Proc) 
           
-          @s3_options     = @options.s3_options     || {}
+          @s3_options     = (@options.s3_options || {}).symbolize_keys
           # setup Amazon Server Side encryption
           @s3_options.reverse_merge!({
             :sse => false,
             :storage_class => :standard,
             :content_disposition => nil
           })
+          @s3_options[:server_side_encryption] ||= @s3_options.delete(:sse)
           
           @s3_endpoint      = @s3_credentials[:endpoint] || 's3.amazonaws.com'
                     
@@ -141,14 +142,11 @@ module Paperclip
           begin
             log("saving #{path(style)}")
             
-            @s3.buckets[@s3_bucket].objects[path(style)].write(
+            @s3.buckets[@s3_bucket].objects[path(style)].write({
               :file => file.path,
               :acl => @s3_permissions[:style.to_sym] || @s3_permissions[:default],
-              :storage_class => @s3_options[:storage_class],
-              :content_type => file.content_type,
-              :content_disposition => @s3_options[:content_disposition],
-              :server_side_encryption => @s3_options[:sse]
-            )
+              :content_type => file.content_type
+            }.reverse_merge(@s3_options))
           rescue AWS::S3::Errors::NoSuchBucket => e
             create_bucket
             retry
