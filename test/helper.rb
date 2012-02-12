@@ -40,7 +40,7 @@ Paperclip.logger = ActiveRecord::Base.logger
 #   reset_dummy(options)
 #   Dummy.new(:image => File.open("#{RAILS_ROOT}/test/fixtures/12k.png"))
 # end
-def rebuild_model options = {}
+def rebuild_model(options = {})
   ActiveRecord::Base.connection.create_table :dummies, :force => true do |table|
     table.column :title, :string
     table.column :other, :string
@@ -59,7 +59,7 @@ def reset_class(class_name, options)
   klass = Object.const_set(class_name, Class.new(ActiveRecord::Base))
   klass.class_eval do
     include Paperclip::Glue
-    has_attached_file :avatar, options
+    has_attached_file :avatar, options        
   end
   klass.reset_column_information
   klass

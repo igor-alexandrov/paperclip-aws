@@ -8,7 +8,7 @@ class AwsStorageTest < Test::Unit::TestCase
   end
   
   def default_model_options(options={})
-    {
+    options.reverse_merge!({
       :storage => :aws,
       :bucket => "testing",
       :s3_credentials => {
@@ -16,44 +16,50 @@ class AwsStorageTest < Test::Unit::TestCase
         :secret_access_key => "SECRET_ACCESS_KEY"
       },
       :path => ":attachment/:basename.:extension"
-    }.deep_merge!(options)
+    })
   end
   
-  context "Parsing S3 credentials" do
-    setup do      
-      rebuild_model default_model_options
-
-      @dummy = Dummy.new
-      @avatar = @dummy.avatar
-    end
-    
+  context "Parsing S3 credentials" do    
     should "get the correct credentials when RAILS_ENV is production" do
       rails_env("production")
       
-      assert_equal(
-        { :access_key_id => "12345" },
-        @avatar.parse_credentials(
+      rebuild_model default_model_options(
+        :s3_credentials => {
           :production => { :access_key_id => '12345' },
-          :development => { :access_key_id => '54321' }
-        )
+          :development => { :access_key_id => '54321' }          
+        }
       )
+
+      @dummy = Dummy.new      
+      assert_equal({ :access_key_id => "12345" }, @dummy.avatar.s3_credentials)
     end
     
     should "get the correct credentials when RAILS_ENV is development" do
       rails_env("development")
       
-      assert_equal(
-        { :access_key_id => "54321" },
-        @avatar.parse_credentials(
+      rebuild_model default_model_options(
+        :s3_credentials => {
           :production => { :access_key_id => '12345' },
-          :development => { :access_key_id => '54321' }
-        )
-      )  
+          :development => { :access_key_id => '54321' }          
+        }
+      )
+
+      @dummy = Dummy.new          
+      assert_equal({ :access_key_id => "54321" }, @dummy.avatar.s3_credentials)
     end
     
     should "return the argument if the key does not exist" do
       rails_env("not really an env")
-      assert_equal({:test => "12345"}, @avatar.parse_credentials(:test => "12345"))
+      
+      rebuild_model default_model_options(
+        :s3_credentials => {
+          :test => "12345"
+        }
+      )
+
+      @dummy = Dummy.new
+      
+      assert_equal({:test => "12345"}, @dummy.avatar.s3_credentials)
     end
     
   end
@@ -193,7 +199,10 @@ class AwsStorageTest < Test::Unit::TestCase
   
   context "An attachment that uses S3 for storage and has spaces in file name" do
     setup do
-      rebuild_model default_model_options(:styles  => { :large => ['500x500#', :jpg] })
+      rebuild_model default_model_options(
+        :styles  => { :large => ['500x500#', :jpg] },
+        :restricted_characters => /[&$+,\/:;=?@<>\[\]\{\}\|\\\^~%#]/
+      )
       
       @dummy = Dummy.new
       @dummy.avatar = File.new(fixture_file('spaced file.png'), 'rb')
@@ -286,6 +295,28 @@ class AwsStorageTest < Test::Unit::TestCase
       @dummy = Dummy.new
       @dummy.avatar = File.new(fixture_file('spaced file.png'), 'rb')
       @dummy.save
+    end
+    
+    should "allow to modify options in instance" do
+      rebuild_model default_model_options
+
+      @writer.expects(:write).with do |value|
+        value[:sse] == nil &&
+        value[:server_side_encryption] == false &&
+        value[:storage_class] == :standard &&
+        value[:content_disposition] == "attachment; filename=spaced_file.png" &&
+        value[:expires] == nil
+      end
+      
+      Dummy.class_eval do
+        before_save do      
+          self.avatar.s3_options[:content_disposition] = "attachment; filename=#{self.avatar_file_name}"
+        end        
+      end
+      
+      @dummy = Dummy.new
+      @dummy.avatar = File.new(fixture_file('spaced file.png'), 'rb')
+      @dummy.save      
     end
   end
 end

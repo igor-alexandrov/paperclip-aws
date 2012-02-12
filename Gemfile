@@ -1,5 +1,5 @@
 source "http://rubygems.org"
-  gem 'paperclip', '>=2.4.0'
+  gem 'paperclip', '~>2.6.0'
   gem 'aws-sdk', '>=1.2.0'
 
 group :development do
@@ -8,7 +8,7 @@ group :development do
 end
 
 group :test do
-  gem "sqlite3"
+  gem "sqlite3", '~> 1.3.4'
   gem 'shoulda-context'
   gem "mocha"    
 end
