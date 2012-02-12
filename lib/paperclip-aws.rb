@@ -16,9 +16,8 @@ module Paperclip
         end unless defined?(AWS)
         
         attr_accessor :s3_options
-        base.instance_eval do
-
-                   
+        
+        base.instance_eval do     
           @s3_credentials = parse_credentials(@options.s3_credentials)
           @s3_permissions = set_permissions(@options.s3_permissions)
           
@@ -35,6 +34,7 @@ module Paperclip
           @s3_bucket = @s3_bucket.call(self) if @s3_bucket.is_a?(Proc) 
           
           @s3_options     = (@options.s3_options || {}).symbolize_keys
+          
           # setup Amazon Server Side encryption
           @s3_options.reverse_merge!({
             :sse => false,
