@@ -13,7 +13,7 @@
 * can generate urls for `read`, `write` и `delete` operations;
 * correctly sets content-type of uploaded files;
 * ability to set content-disposition of uploaded files;
-* **supports amazon server side encryption** (thanks to [pvertenten](https://github.com/pvertenten));
+* **supports amazon server side encryption** (thanks to @pvertenten);
 * highly compatible with included in Paperclip S3 storage module
 
 
@@ -51,18 +51,22 @@ After this add 'paperclip-aws' to your `Gemfile` or `environment.rb`
                         :s3_permissions => :public_read,
                         :s3_protocol => 'http',
                         :s3_options => {
-                          :sse => 'AES256',
+                          :server_side_encryption => 'AES256',
                           :storage_class => :reduced_redundancy,
                           :content_disposition => 'attachment'
                         },
                         
                         :path => "company_documents/:id/:style/:data_file_name"  
                         
-      # You also can modify @s3_options hash directly.
+      # You also can modify :s3_credentials, :s3_bucket, :s3_permissions, :s3_options, :s3_protocol, :s3_host_alias directly in instance.
       before_save do
         self.data.s3_options[:content_disposition] = "attachment; filename=#{self.data_file_name}"
-        self.data.s3_options[:sse] = true if self.confidential_information?
+        self.data.s3_options[:server_side_encryption] = true if self.confidential_information?
         self.data.s3_options[:storage_class] = true if self.unimportant_information?
+        
+        self.data.s3_protocol = 'https' if self.confidential_information?
+        
+        self.data.s3_permissions = :authenticated_read if self.private?
       end                          
     end
 
