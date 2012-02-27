@@ -10,16 +10,15 @@
 * supports both `http` and `https` urls;
 * supports expiring urls;
 * supports different permissions for each Paperclip style;
-* can generate urls for `read`, `write` и `delete` operations;
-* correctly sets content-type of uploaded files;
-* ability to set content-disposition of uploaded files;
+* supports generating urls for `read`, `write` и `delete` operations;
 * **supports amazon server side encryption** (thanks to @pvertenten);
+* **supports versioning**;
 * highly compatible with included in Paperclip S3 storage module
 
 
 ## Requirements ##
 
-* [paperclip][0] ~> 2.4
+* [paperclip][0] ~> 2.6
 * [aws-sdk][1] >= 1.2.0
 
 ## Installation ##
@@ -46,7 +45,7 @@ After this add 'paperclip-aws' to your `Gemfile` or `environment.rb`
                           :secret_access_key => self.s3_config['secret_access_key'],
                           :endpoint => self.s3_config['endpoint']
                         },
-                        :bucket => self.s3_config['bucket'],                    
+                        :s3_bucket => self.s3_config['bucket'],                    
                         :s3_host_alias => self.s3_config['s3_host_alias'],
                         :s3_permissions => :public_read,
                         :s3_protocol => 'http',
@@ -109,12 +108,12 @@ Default protocol to use: `'http'` or `'https'`.
 ### :s3_options ###
 Hash of additional options. Available options are:
 
-* `:sse` –  `'AES256'` (the only available encryption now)
+* `:server_side_encryption` –  `'AES256'` (the only available encryption now)
 * `:storage_class` – `:standard` (default) or `:reduced_redundancy`
 * `:content_disposition`
 
 
-## How `paperclip-aws` creates urls?
+## How `paperclip-aws` creates urls? ##
 
 'paperclip-aws' redefines Paperclip `url` method to get object URL.
 
@@ -143,13 +142,28 @@ Supported options are:
   
   Default is set to `:read`, which is the most common used.
 
-## Can I use it in production?
+## Versioning ##
+
+'paperclip-aws' lets you easily use S3 file versioning if it is enabled for selected bucket.
+To find more information about versioning and how to enable it, please follow [AWS FAQs](http://aws.amazon.com/s3/faqs/#What_is_Versioning) and [AWS S3 Docs](http://docs.amazonwebservices.com/AmazonS3/latest/dev/Versioning.html).
+
+Also you can enable versioning from your Rails console by using following code:
+  
+    some_s3_attachment.data.bucket.enable_versioning
+  
+Please make sure, that user that is used to connect to S3 has enough permissions to do this, or you will get `AWS::S3::Errors::AccessDenied` error.
+  
+To get array of file versions use #versions method:
+  
+    some_s3_attachment.data.versions()
+
+## Can I use it in production? ##
 
 Yes, usage of **paperclip-aws** is confirmed by several rather big projects:
 
 * [www.sdelki.ru](http://www.sdelki.ru)
-* [www.lienlog.com](http://www.lienlog.com) (opens for public in December 2011)
-* [www.sharypic.com](http://www.sharypic.com) (soon)
+* [www.lienlog.com](http://www.lienlog.com)
+* [www.sharypic.com](http://www.sharypic.com)
 
 I hope that it is used in a lot of other projects, if you know them – let me know.
     
