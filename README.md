@@ -112,6 +112,24 @@ Hash of additional options. Available options are:
 * `:storage_class` – `:standard` (default) or `:reduced_redundancy`
 * `:content_disposition`
 
+### :path ###
+Remember to specify a folder in a root of your bucket. If you don't , you'll be able to save without problems, 
+but S3 will respond with Access Denied on read.
+
+Examples:
+
+* 1) Bad (you will get permission denied error)
+`:path => "/:style/:id/:filename"`
+
+* 2) Good (there is a root folder specified)
+
+  * 2.1) `:path => "images/:style/:id/:filename"`
+  * 2.2) `:path => ":style/:id/:filename"`
+  * 2.3) `:path => "/images/:style/:id/:filename"`
+
+The main problem of the "Bad" case - it creates nameless folder in a root of a bucket which seems to be an issue when reading, 
+so make sure you have a folder in a root of your bucket.
+
 
 ## How `paperclip-aws` creates urls? ##
 
