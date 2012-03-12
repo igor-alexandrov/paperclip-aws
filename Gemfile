@@ -1,5 +1,5 @@
 source "http://rubygems.org"
-  gem 'paperclip', '>=2.4.0'
+  gem 'paperclip', '>=2.5.0'
   gem 'aws-sdk', '>=1.2.0'
 
 group :development do
