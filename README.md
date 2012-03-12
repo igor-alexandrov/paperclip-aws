@@ -118,14 +118,13 @@ but S3 will respond with Access Denied on read.
 
 Examples:
 
-* 1) Bad (you will get permission denied error)
-  * 1.1) `:path => "/:style/:id/:filename"`
-  * 1.2) `:path => "/images/:id/:filename"`
+* **Bad** (you will get permission denied error)
+  *  `:path => "/:style/:id/:filename"`
+  *  `:path => "/images/:id/:filename"`
 
-* 2) Good (there is a root folder specified)
-
-  * 2.1) `:path => "images/:style/:id/:filename"`
-  * 2.2) `:path => ":style/:id/:filename"`
+* **Good** (there is a root folder specified)
+  *  `:path => "images/:style/:id/:filename"`
+  *  `:path => ":style/:id/:filename"`
 
 The main problem of the "Bad" case - it creates nameless folder in a root of a bucket which seems to be an issue when reading, 
 so make sure you don't put '/' in front of the path.
