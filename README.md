@@ -183,6 +183,32 @@ Yes, usage of **paperclip-aws** is confirmed by several rather big projects:
 * [www.sharypic.com](http://www.sharypic.com)
 
 I hope that it is used in a lot of other projects, if you know them – let me know.
+
+## Note on Patches / Pull Requests
+
+* Fork the project.
+* Make your feature addition or bug fix.
+* Add tests for it. This is important so I don't break it in a
+  future version unintentionally.
+* Commit, do not mess with rakefile, version, or history.
+  (if you want to have your own version, that is fine but
+   bump version in a commit by itself I can ignore when I pull)
+* Send me a pull request. Bonus points for topic branches.
+
+## Credits
+
+![JetRockets](http://www.jetrockets.ru/images/logo.png)
+
+Paperclip-AWS is maintained by [JetRockets](http://www.jetrockets.ru/en).
+
+Contributors:
+
+* [Igor Alexandrov](http://igor-alexandrov.github.com/)
+* [Alexey Solilin](https://github.com/solilin)
+
+## License
+
+It is free software, and may be redistributed under the terms specified in the LICENSE file.
     
 [0]: https://github.com/thoughtbot/paperclip
 [1]: https://github.com/amazonwebservices/aws-sdk-for-ruby
