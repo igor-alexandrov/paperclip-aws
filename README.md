@@ -197,7 +197,7 @@ I hope that it is used in a lot of other projects, if you know them – let me k
 
 ## Credits
 
-![JetRockets](http://www.jetrockets.ru/images/logo.png)
+![JetRockets](http://www.jetrockets.ru/public/logo.png)
 
 Paperclip-AWS is maintained by [JetRockets](http://www.jetrockets.ru/en).
 
