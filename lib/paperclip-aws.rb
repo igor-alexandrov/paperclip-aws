@@ -101,7 +101,7 @@ module Paperclip
 
       # Returns representation of the data of the file assigned to the given
       # style, in the format most representative of the current storage.
-      def to_file style = default_style
+      def to_file(style = default_style)
         return @queued_for_write[style] if @queued_for_write[style]
         filename = path(style)
         extname  = File.extname(filename)
@@ -147,6 +147,18 @@ module Paperclip
           end
         end
         @queued_for_delete = []
+      end
+
+      def copy_to_local_file(style, local_dest_path)
+        log("copying #{path(style)} to local file #{local_dest_path}")
+        local_file = ::File.open(local_dest_path, 'wb')
+
+        file = self.s3.buckets[@s3_bucket].objects[self.path(style)]
+        local_file.write(file.read)
+        local_file.close
+      rescue AWS::Errors::Base => e
+        warn("#{e} - cannot copy #{path(style)} to local file #{local_dest_path}")
+        false
       end
       
     # PRIVATE METHODS        
