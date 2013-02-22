@@ -3,8 +3,8 @@ source "http://rubygems.org"
   gem 'aws-sdk', '>=1.2.0'
 
 group :development do
-  gem "bundler", "~> 1.0.0"
-  gem "jeweler", "~> 1.6.4"
+  gem "bundler"
+  gem "jeweler"
 end
 
 group :test do

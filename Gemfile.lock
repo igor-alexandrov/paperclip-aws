@@ -53,8 +53,8 @@ PLATFORMS
 
 DEPENDENCIES
   aws-sdk (>= 1.2.0)
-  bundler (~> 1.0.0)
-  jeweler (~> 1.6.4)
+  bundler
+  jeweler
   mocha
   paperclip (>= 2.5.0)
   shoulda-context
