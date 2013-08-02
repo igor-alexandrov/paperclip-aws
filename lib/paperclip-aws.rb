@@ -47,13 +47,13 @@ module Paperclip
             :expires => 60*60,
             :action => :read
           })          
-          secure = ( self.choose_protocol(style, options) == 'https' )                   
+          secure = ( self.choose_protocol(style, options) == 'https:' )
           return self.s3.buckets[@s3_bucket].objects[path(style).gsub(%r{^/}, "")].url_for(options[:action], {  :secure => secure, :expires => options[:expires] }).to_s
         else
           if @s3_host_alias.present?
-            url = "#{choose_protocol(style, options)}://#{@s3_host_alias}/#{path(style).gsub(%r{^/}, "")}"
+            url = "#{choose_protocol(style, options)}//#{@s3_host_alias}/#{path(style).gsub(%r{^/}, "")}"
           else
-            url = "#{choose_protocol(style, options)}://#{@s3_endpoint}/#{@s3_bucket}/#{path(style).gsub(%r{^/}, "")}"
+            url = "#{choose_protocol(style, options)}//#{@s3_endpoint}/#{@s3_bucket}/#{path(style).gsub(%r{^/}, "")}"
           end    
           return URI.escape(url)
         end              
@@ -92,11 +92,13 @@ module Paperclip
       end
 
       def choose_protocol(style, options={})
-        if options[:protocol].present?
-          return options[:protocol].to_s
+        protocol = if options[:protocol].present?
+          options[:protocol].to_s
         else
-          return @s3_protocol.is_a?(Proc) ? @s3_protocol.call(style, self) : @s3_protocol
+          @s3_protocol.is_a?(Proc) ? @s3_protocol.call(style, self) : @s3_protocol
         end
+
+        "#{protocol}:" if protocol.present?
       end
 
       # Returns representation of the data of the file assigned to the given

@@ -105,6 +105,15 @@ class AwsStorageTest < Test::Unit::TestCase
       assert_match  /\Ahttps:\/\/.+/,  @dummy.avatar.url
     end
     
+    should "return a scheme-less url with empty protocol predefined" do
+      rebuild_model default_model_options(:s3_protocol => '')
+
+      @dummy = Dummy.new
+      @dummy.avatar = StringIO.new(".")
+
+      assert_match  /\A\/\/.+/,  @dummy.avatar.url
+    end
+
     should "return a correct protocol protocol based on s3_permissions" do
       rebuild_model default_model_options(:s3_permissions => :public_read)
       @dummy = Dummy.new
