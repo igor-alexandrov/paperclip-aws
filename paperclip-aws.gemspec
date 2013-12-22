@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "paperclip-aws"
-  s.version = "1.6.7"
+  s.version = "1.6.8"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Igor Alexandrov"]
-  s.date = "2013-02-22"
+  s.date = "2013-12-22"
   s.description = "'paperclip-aws' is a full featured storage module that supports all S3 locations (US, European and Tokio) without any additional hacking."
   s.email = "igor.alexandrov@gmail.com"
   s.extra_rdoc_files = [
@@ -28,18 +28,16 @@ Gem::Specification.new do |s|
     "paperclip-aws.gemspec",
     "test/aws_storage_test.rb",
     "test/database.yml",
-    "test/fixtures/5k.png",
-    "test/fixtures/spaced file.png",
     "test/helper.rb"
   ]
   s.homepage = "http://github.com/igor-alexandrov/paperclip-aws"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.24"
+  s.rubygems_version = "2.0.3"
   s.summary = "Storage module to official 'aws-sdk' gem for Amazon S3"
 
   if s.respond_to? :specification_version then
-    s.specification_version = 3
+    s.specification_version = 4
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<paperclip>, [">= 2.5.0"])
