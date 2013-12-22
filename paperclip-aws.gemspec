@@ -43,18 +43,18 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<paperclip>, [">= 2.5.0"])
       s.add_runtime_dependency(%q<aws-sdk>, [">= 1.2.0"])
       s.add_development_dependency(%q<bundler>, [">= 0"])
-      s.add_development_dependency(%q<jeweler>, [">= 0"])
+      s.add_development_dependency(%q<jeweler>, [">= 1.8.8"])
     else
       s.add_dependency(%q<paperclip>, [">= 2.5.0"])
       s.add_dependency(%q<aws-sdk>, [">= 1.2.0"])
       s.add_dependency(%q<bundler>, [">= 0"])
-      s.add_dependency(%q<jeweler>, [">= 0"])
+      s.add_dependency(%q<jeweler>, [">= 1.8.8"])
     end
   else
     s.add_dependency(%q<paperclip>, [">= 2.5.0"])
     s.add_dependency(%q<aws-sdk>, [">= 1.2.0"])
     s.add_dependency(%q<bundler>, [">= 0"])
-    s.add_dependency(%q<jeweler>, [">= 0"])
+    s.add_dependency(%q<jeweler>, [">= 1.8.8"])
   end
 end
 
