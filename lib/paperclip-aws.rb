@@ -126,7 +126,7 @@ module Paperclip
             
             self.s3.buckets[@s3_bucket].objects[path(style)].write({
               :file => file.path,
-              :acl => @s3_permissions[:style.to_sym] || @s3_permissions[:default],
+              :acl => @s3_permissions[style.to_sym] || @s3_permissions[:default],
               :content_type => file.content_type.to_s.strip
             }.reverse_merge(@s3_options))
           rescue AWS::S3::Errors::NoSuchBucket => e
