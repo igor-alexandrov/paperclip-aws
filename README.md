@@ -81,6 +81,9 @@ Endpoint where your bucket is located. Default is `'s3.amazonaws.com'` which is 
 
 You can find full list of endpoints and regions [here](http://aws.amazon.com/articles/3912#s3)
 
+### :s3_host_alias ###
+The CNAME/Alias you have set up for your s3 bucket (e.g. uploads.mysite.com), if you have one.
+
 ### :s3_permissions  ###
 Sets permissions to your objects. Values are:
 
