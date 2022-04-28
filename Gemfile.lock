@@ -23,7 +23,8 @@ GEM
       climate_control (>= 0.0.3, < 1.0)
     faraday (0.8.8)
       multipart-post (~> 1.2.0)
-    git (1.2.6)
+    git (1.11.0)
+      rchardet (~> 1.8)
     github_api (0.10.1)
       addressable
       faraday (~> 0.8.1)
@@ -70,6 +71,7 @@ GEM
       mime-types
     rack (1.5.2)
     rake (10.1.1)
+    rchardet (1.8.0)
     rdoc (4.0.1)
       json (~> 1.4)
     shoulda-context (1.1.6)
